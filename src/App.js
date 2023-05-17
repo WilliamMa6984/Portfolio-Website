@@ -1,10 +1,10 @@
 import './App.css';
-import ITProjectsList from './Components/ITProjects/ITProjectsList.js';
+import Projects from './Components/Projects/Projects';
 
 function App() {
   return (
     <div className="App">
-      
+      <Projects/>
     </div>
   )
 }

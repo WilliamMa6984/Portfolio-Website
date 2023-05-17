@@ -1,0 +1,25 @@
+.Projects {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.Projects > li {
+    position: absolute;
+    background-color: aliceblue;
+    height: 500px;
+    width: 500px;
+    list-style-type: none;
+    transition: 0.3s ease;
+    transform-origin: 250px 250px;
+}
+
+#l1 {
+    background-color: aqua;
+}
+#l2 {
+    background-color: aquamarine;
+}
+#l3 {
+    background-color: bisque;
+}
