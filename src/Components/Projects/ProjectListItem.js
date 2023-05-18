@@ -37,7 +37,7 @@ export default function ProjectListItem(row) {
 
 
     return (
-        <li key={rowData.Id}>
+        <li class="liItem projectItem" key={rowData.Id}>
             <h1 class="heading">{rowData.Title}</h1>
             <p class="subheading"><i>{rowData.Type} | {rowData.Category}</i></p>
             <ul className='TechList'>
