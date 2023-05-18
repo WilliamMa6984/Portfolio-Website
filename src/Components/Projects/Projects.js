@@ -8,12 +8,13 @@ var idx = 0;
 
 // Scroll handler
 document.addEventListener("wheel", (evt) => {
+  var container = document.getElementsByClassName("Projects")[0];
+  container.style.opacity = "1"; // unhide
+
   const direction = Math.sign(evt.wheelDeltaY);
   AnimateScrollList[idx].scroll(direction);
-  if (AnimateScrollList[idx].getGoNext() == true && idx != AnimateScrollList.length-1) {idx++}
-  else if (AnimateScrollList[idx].getGoPrev() == true && idx != 0) {idx--}
-
-  console.log(idx);
+  if (AnimateScrollList[idx].getGoNext() === true && idx !== AnimateScrollList.length-1) {idx++}
+  else if (AnimateScrollList[idx].getGoPrev() === true && idx !== 0) {idx--}
 });
 
 export default class Projects extends Component {
@@ -30,7 +31,7 @@ export default class Projects extends Component {
   }
 
   componentDidMount() {
-    if (AnimateScrollList.length == 0) {
+    if (AnimateScrollList.length === 0) {
       var container = document.getElementsByClassName("Projects")[0];
       var li1 = document.querySelector(".Projects > li");
       var leftAmt = window.innerWidth / 2 - li1.offsetWidth / 2;
@@ -39,18 +40,32 @@ export default class Projects extends Component {
       container.style.top = topAmt + "px";
 
       let lists = document.querySelectorAll(".Projects > li");
-      lists.forEach(list => {
-        list.style.opacity = "0";
-        list.style.transform = "translateX(500px) scale(0)";
-        AnimateScrollList.push(new AnimateScroll(list));
+      lists.forEach(function(list, idx) {
+
+        if (idx === 0) {
+          AnimateScrollList.push(new AnimateScroll(list, FirstOrLast.First));
+          return
+        } else if (idx === lists.length-1) {
+          AnimateScrollList.push(new AnimateScroll(list, FirstOrLast.Last));
+        } else {
+          AnimateScrollList.push(new AnimateScroll(list, null));
+        }
       });
-      console.log(AnimateScrollList);
     }
   }
 }
 
+const FirstOrLast = {
+  First: 0,
+  Last: 1
+}
 
 class AnimateScroll {
+  defX;
+  defScale = 0.5;
+  goNext = false;
+  goPrev = false;
+
   getGoNext() {
     return this.goNext;
   }
@@ -58,15 +73,21 @@ class AnimateScroll {
     return this.goPrev;
   }
 
-  constructor(element) {
-    this.goNext = false;
-    this.goPrev = false;
-
+  constructor(element, firstOrLast) {
+    this.firstOrLast = firstOrLast;
     this.element = element;
 
+    var container = document.getElementsByClassName("Projects")[0];
+    const distToRightSideWindow = container.offsetWidth - element.getBoundingClientRect().right;
+    this.defX = distToRightSideWindow;
+    console.log(this.defX)
+
     // Track current values
-    this.x = 500; // def 0
-    this.scale = 0; // def 1
+    this.x = this.defX;
+    this.scale = this.defScale;
+
+    element.style.opacity = "0";
+    element.style.transform = "scale(" + this.defScale + ") translateX(" + this.defX + "px)";
   }
 
   // Do animation when scroll (up or down)
@@ -78,30 +99,33 @@ class AnimateScroll {
     var transXValue = direction*xStep + this.x;
     var scaleValue = -direction*scaleStep + this.scale;
 
-    if (scaleValue >= 2) {
+    if (transXValue < -this.defX) {
+      if (this.firstOrLast === FirstOrLast.Last) {return} // Don't transition
+
       this.element.style.opacity = "0";
+      this.element.style.transform = "translateX(" + this.x + "px)";
       
       this.goNext = true;
       this.goPrev = false;
 
       return
-    } else if (scaleValue < 0.2) {
+    } else if (transXValue > this.defX) {
+      if (this.firstOrLast === FirstOrLast.First) {return} // Don't transition
+
       this.element.style.opacity = "0";
+      this.element.style.transform = "translateX(" + this.x + "px) scale(" + this.defScale + ")";
 
       this.goNext = false;
       this.goPrev = true;
       return
     } else {
       this.element.style.opacity = "1";
-      this.element.style.filter = "blur(0px)";
 
       this.goNext = false;
       this.goPrev = false;
     }
 
-    if (scaleValue > 0) {
-      this.element.style.transform = "translateX(" + transXValue + "px) scale(" + scaleValue + ")";
-    }
+    this.element.style.transform = "translateX(" + transXValue + "px)";
 
     // console.log(this.goNext + " " + this.goPrev);
 
