@@ -1,0 +1,54 @@
+.Projects > li {
+    background-color: aliceblue;
+    width: 50%;
+    height: 75vh;
+}
+
+.TechList {
+    margin: 0;
+    padding: 0;
+}
+
+.TechList > li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+.TechLi {
+    color: white;
+    background-color: black;
+    padding: 10px;
+    margin: 0 5px;
+    border-radius: 7px;
+    vertical-align: middle;
+}
+.UrlLi {
+    color: white;
+    margin: 0 5px;
+    vertical-align: middle;
+}
+
+.DescImg {
+    width: 100%;
+    height: 80%;
+    object-fit: cover;
+}
+
+.logo {
+    object-fit: cover;
+    padding: 0;
+    margin: 0;
+}
+.logo > img {
+    height: 40px;
+    padding: 0;
+    margin: 0;
+}
+
+.heading {
+    margin-bottom: 0;
+}
+.subheading {
+    margin-top: 0;
+    margin-bottom: 2em;
+}

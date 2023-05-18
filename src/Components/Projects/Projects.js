@@ -1,5 +1,7 @@
 import { Component } from 'react';
 import './Projects.css';
+import ProjectListItem from './ProjectListItem';
+import projectsData from './ProjectsData.json';
 
 // List of animation handler objects
 var AnimateScrollList = [];
@@ -19,12 +21,16 @@ document.addEventListener("wheel", (evt) => {
 
 export default class Projects extends Component {
   render() {
+    var lists = projectsData.map(function(row) {
+      return (
+        <ProjectListItem data={row}/>
+      );
+    });
+
     return (
       <div>
         <ul className="Projects">
-          <li id="l1">test</li>
-          <li id="l2">test</li>
-          <li id="l3">test</li>
+            {lists}
         </ul>
       </div>
     );
@@ -35,9 +41,7 @@ export default class Projects extends Component {
       var container = document.getElementsByClassName("Projects")[0];
       var li1 = document.querySelector(".Projects > li");
       var leftAmt = window.innerWidth / 2 - li1.offsetWidth / 2;
-      var topAmt = window.innerHeight / 2 - li1.offsetHeight / 2;
       container.style.left = leftAmt + "px";
-      container.style.top = topAmt + "px";
 
       let lists = document.querySelectorAll(".Projects > li");
       lists.forEach(function(list, idx) {
@@ -80,14 +84,25 @@ class AnimateScroll {
     var container = document.getElementsByClassName("Projects")[0];
     const distToRightSideWindow = container.offsetWidth - element.getBoundingClientRect().right;
     this.defX = distToRightSideWindow;
-    console.log(this.defX)
 
-    // Track current values
-    this.x = this.defX;
+    // Set default values to transform to
     this.scale = this.defScale;
 
-    element.style.opacity = "0";
-    element.style.transform = "scale(" + this.defScale + ") translateX(" + this.defX + "px)";
+    if (firstOrLast !== FirstOrLast.First) {
+      this.x = this.defX;
+      element.style.opacity = "0";
+      element.style.transform = "scale(" + this.defScale + ") translateX(" + this.defX + "px)";
+    } else {
+      this.x = 0;
+    }
+
+    // By reading the offsetHeight property, we are forcing
+    // the browser to flush the pending CSS changes (which it
+    // does to ensure the value obtained is accurate).
+    this.a = element.offsetWidth;
+
+    element.style.transition = "0.3s ease";
+    element.style.transformOrigin = "100% 50%";
   }
 
   // Do animation when scroll (up or down)
